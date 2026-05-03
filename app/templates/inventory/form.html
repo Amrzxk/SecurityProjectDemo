@@ -26,6 +26,10 @@
             <label class="form-label fw-bold">Description</label>
             <textarea name="description" class="form-control" rows="4" placeholder="Enter item description (optional)">{{ item.description if item else '' }}</textarea>
           </div>
+          <div class="mb-4">
+            <label class="form-label fw-bold">Sensitive note <span class="text-muted small">(AES-CBC at rest)</span></label>
+            <textarea name="sensitive_note" class="form-control" rows="3" placeholder="Stored encrypted in the database (optional)">{{ sensitive_note_plain }}</textarea>
+          </div>
           <div class="d-grid gap-2">
             <button class="btn btn-primary btn-lg fw-bold" type="submit">
               {% if item %}

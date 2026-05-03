@@ -1,5 +1,17 @@
 from flask import Flask
+from sqlalchemy import inspect, text
 from .extensions import db, login_manager, limiter
+
+
+def _ensure_item_sensitive_note_column():
+    """SQLite: add sensitive_note_cipher if DB predates column (after db.create_all)."""
+    inspector = inspect(db.engine)
+    if 'item' not in inspector.get_table_names():
+        return
+    cols = {c['name'] for c in inspector.get_columns('item')}
+    if 'sensitive_note_cipher' not in cols:
+        with db.engine.begin() as conn:
+            conn.execute(text('ALTER TABLE item ADD COLUMN sensitive_note_cipher TEXT'))
 
 
 def create_app(test_config=None):
@@ -30,5 +42,6 @@ def create_app(test_config=None):
 
     with app.app_context():
         db.create_all()
+        _ensure_item_sensitive_note_column()
 
     return app

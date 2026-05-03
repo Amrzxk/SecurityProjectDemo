@@ -94,6 +94,8 @@ class Item(db.Model):
     name = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text, nullable=True)
     quantity = db.Column(db.Integer, default=0)
+    # AES-CBC ciphertext; IV is prepended inside the payload (URL-safe base64); see field_crypto.
+    sensitive_note_cipher = db.Column(db.Text, nullable=True)
     def __repr__(self):
         return f"<Item {self.name} ({self.quantity})>"
 

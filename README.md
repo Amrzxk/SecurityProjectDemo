@@ -28,6 +28,8 @@ python scripts\view_db.py
 
 Then open `http://127.0.0.1:8080` (defaults to **read-only**; use `--writable` only when the Flask server is stopped).
 
+Optional **AES-CBC** field encryption: inventory items can carry a sensitive note encrypted at rest (`sensitive_note_cipher`). Set environment variable **`FIELD_ENCRYPTION_KEY`** to a **64-character hex** string (32-byte AES-256 key). If unset, development uses a key derived from `SECRET_KEY`.
+
 Default admin credentials created by the seed script:
 
 - username: `admin`

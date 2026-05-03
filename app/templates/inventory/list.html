@@ -18,20 +18,28 @@
           <th>Name</th>
           <th>Quantity</th>
           <th>Description</th>
+          <th>Sensitive note</th>
           <th class="text-end">Actions</th>
         </tr>
       </thead>
       <tbody>
-      {% for it in items %}
+      {% for row in items %}
         <tr>
           <td>
-            <strong>{{ it.name }}</strong>
+            <strong>{{ row.item.name }}</strong>
           </td>
           <td>
-            <span class="badge bg-primary">{{ it.quantity }}</span>
+            <span class="badge bg-primary">{{ row.item.quantity }}</span>
           </td>
           <td>
-            {{ it.description or '—' }}
+            {{ row.item.description or '—' }}
+          </td>
+          <td>
+            {% if row.sensitive_note %}
+              <span class="small text-break">{{ row.sensitive_note }}</span>
+            {% else %}
+              <span class="text-muted">—</span>
+            {% endif %}
           </td>
           <td class="text-end">
             {% set can_edit = current_user.has_mapped_permission('inventory', 'edit') %}
@@ -39,11 +47,11 @@
             {% if can_edit or can_delete %}
               <div class="btn-group btn-group-sm" role="group">
                 {% if can_edit %}
-                  <a class="btn btn-outline-secondary" href="{{ url_for('inventory.edit', item_id=it.id) }}">Edit</a>
+                  <a class="btn btn-outline-secondary" href="{{ url_for('inventory.edit', item_id=row.item.id) }}">Edit</a>
                 {% endif %}
                 {% if can_delete %}
-                  <form method="post" action="{{ url_for('inventory.delete', item_id=it.id) }}" style="display:inline;">
-                    <button class="btn btn-danger" type="submit" onclick="return confirm('Delete item {{ it.name }}? This cannot be undone.')">Delete</button>
+                  <form method="post" action="{{ url_for('inventory.delete', item_id=row.item.id) }}" style="display:inline;">
+                    <button class="btn btn-danger" type="submit" onclick="return confirm('Delete item {{ row.item.name }}? This cannot be undone.')">Delete</button>
                   </form>
                 {% endif %}
               </div>
