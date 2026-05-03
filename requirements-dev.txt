@@ -1,0 +1,3 @@
+# Optional: browse SQLite at instance/app.db in a browser UI
+-r requirements.txt
+sqlite-web>=0.6,<1

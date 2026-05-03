@@ -1,0 +1,61 @@
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python bytecode / packaging
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Flask / local data (SQLite holds users & hashed passwords — do not commit)
+instance/*.db
+instance/*.sqlite3
+
+# Secrets & local env (SECRET_KEY, DATABASE_URL, etc.)
+.env
+.env.*
+!.env.example
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Type checkers / linters (optional local caches)
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+
+# OS / editors
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# JetBrains / VS Code (uncomment if you prefer not to share workspace settings)
+# .idea/
+# .vscode/

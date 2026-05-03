@@ -1,0 +1,298 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="mb-4">
+  <h2 class="fw-bold mb-1">🔧 Admin Dashboard</h2>
+  <p class="text-muted">Manage roles, permissions, and users. Restricted to admin users only.</p>
+</div>
+
+<!-- Nav Tabs -->
+<ul class="nav nav-tabs mb-4" role="tablist" style="border-bottom: 2px solid #e9ecef;">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active fw-bold" id="roles-tab" data-bs-toggle="tab" data-bs-target="#roles" type="button" role="tab">Roles & Permissions</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link fw-bold" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab">Users</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link fw-bold" id="mapping-tab" data-bs-toggle="tab" data-bs-target="#mapping" type="button" role="tab">Permission Mapping</button>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <!-- Roles & Permissions Tab -->
+  <div class="tab-pane fade show active" id="roles" role="tabpanel">
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-header bg-primary bg-opacity-10 border-bottom">
+            <h5 class="card-title mb-0">➕ Create Role</h5>
+          </div>
+          <div class="card-body">
+            <form method="post" action="{{ url_for('admin.create_role') }}">
+              <div class="input-group">
+                <input name="name" class="form-control" placeholder="Enter role name" required />
+                <button class="btn btn-primary" type="submit">Create</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card mt-3">
+          <div class="card-header bg-primary bg-opacity-10 border-bottom">
+            <h5 class="card-title mb-0">➕ Create Permission</h5>
+          </div>
+          <div class="card-body">
+            <form method="post" action="{{ url_for('admin.create_permission') }}">
+              <div class="input-group">
+                <input name="perm_name" class="form-control" placeholder="e.g. inventory.view" required />
+                <button class="btn btn-primary" type="submit">Create</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card mt-3">
+          <div class="card-header bg-primary bg-opacity-10 border-bottom">
+            <h5 class="card-title mb-0">🔗 Assign Permission to Role</h5>
+          </div>
+          <div class="card-body">
+            <form method="post" action="{{ url_for('admin.assign_permission') }}">
+              <div class="mb-2">
+                <label class="form-label fw-bold">Role</label>
+                <select name="role_name" class="form-select">
+                  {% for r in roles %}
+                    <option value="{{ r.name }}">{{ r.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-bold">Permission</label>
+                <select name="perm_name" class="form-select">
+                  {% for p in perms %}
+                    <option value="{{ p.name }}">{{ p.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="d-grid">
+                <button class="btn btn-primary">Assign Permission</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card mt-3">
+          <div class="card-header bg-primary bg-opacity-10 border-bottom">
+            <h5 class="card-title mb-0">👤 Assign Role to User</h5>
+          </div>
+          <div class="card-body">
+            <form method="post" action="{{ url_for('admin.assign_role') }}">
+              <div class="mb-2">
+                <label class="form-label fw-bold">Username</label>
+                <input name="username" class="form-control" placeholder="Enter username" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-bold">Role</label>
+                <select name="role" class="form-select">
+                  {% for r in roles %}
+                    <option value="{{ r.name }}">{{ r.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="d-grid">
+                <button class="btn btn-primary">Assign Role</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-header bg-primary bg-opacity-10 border-bottom">
+            <h5 class="card-title mb-0">📋 Roles & Permissions</h5>
+          </div>
+          <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+            {% if roles %}
+              <div class="list-group">
+              {% for r in roles %}
+                <div class="list-group-item">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <h6 class="mb-1 fw-bold">{{ r.name }}</h6>
+                      <div class="small">
+                        {% if r.permissions %}
+                          {% for p in r.permissions %}
+                            <span class="badge bg-light text-dark me-1 mb-1">{{ p.name }}</span>
+                          {% endfor %}
+                        {% else %}
+                          <span class="text-muted">No permissions assigned</span>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+              </div>
+            {% else %}
+              <p class="text-muted text-center py-4">No roles defined yet.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users Tab -->
+  <div class="tab-pane fade" id="users" role="tabpanel">
+    <div class="card">
+      <div class="card-header bg-primary bg-opacity-10 border-bottom">
+        <h5 class="card-title mb-0">👥 User Management</h5>
+      </div>
+      <div class="card-body">
+        {% if users %}
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Roles</th>
+                  <th>Status</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for u in users %}
+                <tr>
+                  <td>
+                    <strong>{{ u.username }}</strong>
+                  </td>
+                  <td>
+                    {% if u.roles %}
+                      {% for role in u.roles %}
+                        <span class="badge bg-secondary me-1">{{ role.name }}</span>
+                      {% endfor %}
+                    {% else %}
+                      <span class="text-muted">No roles</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if u.active %}
+                      <span class="badge bg-success">Active</span>
+                    {% else %}
+                      <span class="badge bg-danger">Suspended</span>
+                    {% endif %}
+                  </td>
+                  <td class="text-end">
+                    <div class="btn-group btn-group-sm" role="group">
+                      <!-- Remove roles dropdown -->
+                      {% if u.roles %}
+                        <div class="dropdown d-inline">
+                          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Remove role">
+                            Remove Role
+                          </button>
+                          <ul class="dropdown-menu dropdown-menu-end">
+                            {% for role in u.roles %}
+                              <li>
+                                <form method="post" action="{{ url_for('admin.remove_role_from_user') }}" style="display:inline;">
+                                  <input type="hidden" name="username" value="{{ u.username }}" />
+                                  <input type="hidden" name="role_name" value="{{ role.name }}" />
+                                  <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Remove role {{ role.name }} from {{ u.username }}?')">
+                                    {{ role.name }}
+                                  </button>
+                                </form>
+                              </li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      {% endif %}
+                      
+                      <!-- Suspend/Unsuspend button -->
+                      <form method="post" action="{{ url_for('admin.toggle_user_active') }}" style="display:inline;">
+                        <input type="hidden" name="username" value="{{ u.username }}" />
+                        {% if u.active %}
+                          <button class="btn btn-outline-warning btn-sm" type="submit" onclick="return confirm('Suspend user {{ u.username }}?')" title="Suspend user">
+                            Suspend
+                          </button>
+                        {% else %}
+                          <button class="btn btn-outline-success btn-sm" type="submit" onclick="return confirm('Unsuspend user {{ u.username }}?')" title="Unsuspend user">
+                            Unsuspend
+                          </button>
+                        {% endif %}
+                      </form>
+                      
+                      <!-- Delete button -->
+                      <form method="post" action="{{ url_for('admin.delete_user') }}" style="display:inline;">
+                        <input type="hidden" name="username" value="{{ u.username }}" />
+                        <button class="btn btn-outline-danger btn-sm" type="submit" onclick="return confirm('Delete user {{ u.username }}? This cannot be undone.')" title="Delete user">
+                          Delete
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="text-muted text-center py-5">No users found.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Permission Mapping Tab -->
+  <div class="tab-pane fade" id="mapping" role="tabpanel">
+    <div class="card">
+      <div class="card-header bg-primary bg-opacity-10 border-bottom">
+        <h5 class="card-title mb-0">⚙️ Inventory Permission Mapping</h5>
+      </div>
+      <div class="card-body">
+        <p class="text-muted mb-4">Configure which permissions are required for inventory operations.</p>
+        <form method="post" action="{{ url_for('admin.set_inventory_mapping') }}" class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">View Inventory</label>
+            <select name="view_perm" class="form-select">
+              <option value="">-- no permission --</option>
+              {% for p in perms %}
+                <option value="{{ p.name }}" {% if mappings['inventory.permission.view']==p.name %}selected{% endif %}>{{ p.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Add Items</label>
+            <select name="add_perm" class="form-select">
+              <option value="">-- no permission --</option>
+              {% for p in perms %}
+                <option value="{{ p.name }}" {% if mappings['inventory.permission.add']==p.name %}selected{% endif %}>{{ p.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Edit Items</label>
+            <select name="edit_perm" class="form-select">
+              <option value="">-- no permission --</option>
+              {% for p in perms %}
+                <option value="{{ p.name }}" {% if mappings['inventory.permission.edit']==p.name %}selected{% endif %}>{{ p.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Delete Items</label>
+            <select name="delete_perm" class="form-select">
+              <option value="">-- no permission --</option>
+              {% for p in perms %}
+                <option value="{{ p.name }}" {% if mappings['inventory.permission.delete']==p.name %}selected{% endif %}>{{ p.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-12">
+            <button class="btn btn-primary btn-lg" type="submit">Save Mapping</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

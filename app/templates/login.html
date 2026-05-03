@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center min-vh-50 align-items-center">
+  <div class="col-md-5 col-lg-4">
+    <div class="card shadow-lg" style="border-radius: 12px;">
+      <div class="card-body p-4">
+        <div class="text-center mb-4">
+          <div style="font-size: 2.5rem;">🔐</div>
+          <h3 class="card-title fw-bold mt-2">Sign In</h3>
+          <p class="text-muted small">Access your account securely</p>
+        </div>
+        
+        <form method="post">
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input name="username" class="form-control" required autofocus placeholder="Enter your username" />
+          </div>
+          <div class="mb-4">
+            <label class="form-label">Password</label>
+            <input name="password" type="password" class="form-control" required placeholder="Enter your password" />
+          </div>
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary btn-lg fw-bold">Sign In</button>
+          </div>
+        </form>
+
+        <hr class="my-3">
+        
+        <div class="text-center">
+          <p class="text-muted small mb-0">Don't have an account? <a href="{{ url_for('auth.register') }}" class="text-decoration-none fw-bold">Create one now</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="hero">
+	<div class="mb-4">
+		<div style="font-size: 3rem; margin-bottom: 1rem;">🔐</div>
+		<h1 class="display-3 fw-bold">AuthRBAC</h1>
+		<p class="lead text-muted">Secure Authentication & Role-Based Access Control</p>
+	</div>
+	<div class="mt-4">
+		<a class="btn btn-primary btn-lg me-2" href="{{ url_for('auth.register') }}">Create Account</a>
+		<a class="btn btn-outline-secondary btn-lg" href="{{ url_for('auth.login') }}">Sign In</a>
+	</div>
+</div>
+
+<div class="row mt-5 g-4">
+	<div class="col-md-4">
+		<div class="card h-100">
+			<div class="card-body text-center">
+				<div style="font-size: 2.5rem; margin-bottom: 1rem;">🔒</div>
+				<h5 class="card-title">Secure Hashing</h5>
+				<p class="card-text text-muted">Password security with Argon2, protecting user credentials against modern attacks.</p>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="card h-100">
+			<div class="card-body text-center">
+				<div style="font-size: 2.5rem; margin-bottom: 1rem;">👥</div>
+				<h5 class="card-title">Role Management</h5>
+				<p class="card-text text-muted">Fine-grained role and permission system with flexible assignment and enforcement.</p>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="card h-100">
+			<div class="card-body text-center">
+				<div style="font-size: 2.5rem; margin-bottom: 1rem;">⚡</div>
+				<h5 class="card-title">Rate Limiting</h5>
+				<p class="card-text text-muted">Built-in login protection with rate limiting and IP-based throttling.</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row mt-5">
+	<div class="col-md-8 mx-auto">
+		<div class="card">
+			<div class="card-header">
+				<h5 class="card-title mb-0">About This Demo</h5>
+			</div>
+			<div class="card-body">
+				<p class="mb-3">This project demonstrates <strong>enterprise-grade security</strong> patterns in Flask:</p>
+				<ul class="mb-0">
+					<li>Secure password hashing with Argon2</li>
+					<li>Session-based authentication with Flask-Login</li>
+					<li>Dynamic role and permission system</li>
+					<li>Login rate limiting and account suspension</li>
+					<li>Admin dashboard for user and permission management</li>
+				</ul>
+				<hr class="my-3">
+				<p class="mb-0"><strong>Default Test Credentials:</strong> Username: <code>admin</code> | Password: <code>AdminPass123!@#</code></p>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

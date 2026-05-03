@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="fw-bold mb-1">📦 Inventory</h2>
+    <p class="text-muted mb-0">Manage items in the inventory system</p>
+  </div>
+  {% if current_user.has_mapped_permission('inventory', 'add') %}
+    <a class="btn btn-primary btn-lg" href="{{ url_for('inventory.create') }}">+ Add Item</a>
+  {% endif %}
+</div>
+
+{% if items %}
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Quantity</th>
+          <th>Description</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for it in items %}
+        <tr>
+          <td>
+            <strong>{{ it.name }}</strong>
+          </td>
+          <td>
+            <span class="badge bg-primary">{{ it.quantity }}</span>
+          </td>
+          <td>
+            {{ it.description or '—' }}
+          </td>
+          <td class="text-end">
+            {% set can_edit = current_user.has_mapped_permission('inventory', 'edit') %}
+            {% set can_delete = current_user.has_mapped_permission('inventory', 'delete') %}
+            {% if can_edit or can_delete %}
+              <div class="btn-group btn-group-sm" role="group">
+                {% if can_edit %}
+                  <a class="btn btn-outline-secondary" href="{{ url_for('inventory.edit', item_id=it.id) }}">Edit</a>
+                {% endif %}
+                {% if can_delete %}
+                  <form method="post" action="{{ url_for('inventory.delete', item_id=it.id) }}" style="display:inline;">
+                    <button class="btn btn-danger" type="submit" onclick="return confirm('Delete item {{ it.name }}? This cannot be undone.')">Delete</button>
+                  </form>
+                {% endif %}
+              </div>
+            {% else %}
+              <span class="badge bg-light text-dark">View Only</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="card border-0 bg-light p-5 text-center">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
+    <h5>No items in inventory yet</h5>
+    <p class="text-muted mb-0">
+      {% if current_user.has_mapped_permission('inventory', 'add') %}
+        <a href="{{ url_for('inventory.create') }}" class="text-decoration-none">Add your first item</a>
+      {% else %}
+        Items will appear here once they are added.
+      {% endif %}
+    </p>
+  </div>
+{% endif %}
+
+{% endblock %}

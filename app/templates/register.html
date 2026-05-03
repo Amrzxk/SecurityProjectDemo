@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center min-vh-50 align-items-center">
+  <div class="col-md-5 col-lg-4">
+    <div class="card shadow-lg" style="border-radius: 12px;">
+      <div class="card-body p-4">
+        <div class="text-center mb-4">
+          <div style="font-size: 2.5rem;">✨</div>
+          <h3 class="card-title fw-bold mt-2">Create Account</h3>
+          <p class="text-muted small">Join us in 30 seconds</p>
+        </div>
+        
+        <form method="post">
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input name="username" class="form-control" required placeholder="Choose a unique username" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email <span class="text-muted">(optional)</span></label>
+            <input name="email" type="email" class="form-control" placeholder="your@email.com" />
+          </div>
+          <div class="mb-4">
+            <label class="form-label">Password</label>
+            <input name="password" type="password" class="form-control" required placeholder="Min 8 chars, uppercase, digit, symbol" />
+            <small class="text-muted d-block mt-2">
+              Password must contain: uppercase letter, lowercase letter, digit, special character
+            </small>
+          </div>
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary btn-lg fw-bold">Create Account</button>
+          </div>
+        </form>
+
+        <hr class="my-3">
+        
+        <div class="text-center">
+          <p class="text-muted small mb-0">Already have an account? <a href="{{ url_for('auth.login') }}" class="text-decoration-none fw-bold">Sign in here</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

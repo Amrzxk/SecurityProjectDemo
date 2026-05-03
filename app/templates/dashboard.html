@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row">
+	<div class="col-md-8">
+		<div class="card">
+			<div class="card-body">
+				<div class="d-flex align-items-center gap-3 mb-4">
+					<div style="font-size: 2.5rem;">👋</div>
+					<div>
+						<h3 class="card-title mb-0">Welcome, {{ current_user.username }}!</h3>
+						<p class="text-muted mb-0">You're logged in and ready to go</p>
+					</div>
+				</div>
+
+				<hr class="my-4">
+
+				<div class="mb-4">
+					<h5 class="fw-bold mb-3">Your Roles & Permissions</h5>
+					{% if current_user.roles %}
+						<div class="mb-3">
+							<p class="mb-2"><strong>Assigned Roles:</strong></p>
+							<div>
+								{% for r in current_user.roles %}
+									<span class="badge bg-primary me-2 mb-2">{{ r.name }}</span>
+								{% endfor %}
+							</div>
+						</div>
+
+						<p class="mb-2"><strong>Permissions:</strong></p>
+						<div>
+							{% set perms_shown = [] %}
+							{% for r in current_user.roles %}
+								{% for p in r.permissions %}
+									{% if p.name not in perms_shown %}
+										<span class="badge bg-light text-dark me-2 mb-2">{{ p.name }}</span>
+										{% set _ = perms_shown.append(p.name) %}
+									{% endif %}
+								{% endfor %}
+							{% endfor %}
+							{% if not perms_shown %}
+								<span class="text-muted">No permissions assigned</span>
+							{% endif %}
+						</div>
+					{% else %}
+						<p class="text-muted">You have not been assigned any roles yet. Contact an administrator.</p>
+					{% endif %}
+				</div>
+
+				<hr class="my-4">
+
+				<div class="alert alert-info mb-0">
+					<strong>💡 Quick Links:</strong>
+					{% if current_user.has_permission('inventory.view') %}
+						<br><a href="{{ url_for('inventory.index') }}" class="alert-link">View Inventory</a>
+					{% endif %}
+					{% if current_user.has_role('admin') %}
+						<br><a href="{{ url_for('admin.index') }}" class="alert-link">Admin Dashboard</a>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

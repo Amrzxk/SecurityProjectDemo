@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="card">
+      <div class="card-header bg-primary bg-opacity-10 border-bottom">
+        <h4 class="card-title mb-0">
+          {% if item %}
+            ✏️ Edit Item
+          {% else %}
+            ➕ Add New Item
+          {% endif %}
+        </h4>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          <div class="mb-4">
+            <label class="form-label fw-bold">Item Name <span class="text-danger">*</span></label>
+            <input name="name" class="form-control" value="{{ item.name if item else '' }}" required placeholder="Enter item name" />
+          </div>
+          <div class="mb-4">
+            <label class="form-label fw-bold">Quantity <span class="text-danger">*</span></label>
+            <input name="quantity" type="number" class="form-control" value="{{ item.quantity if item else 0 }}" required min="0" />
+          </div>
+          <div class="mb-4">
+            <label class="form-label fw-bold">Description</label>
+            <textarea name="description" class="form-control" rows="4" placeholder="Enter item description (optional)">{{ item.description if item else '' }}</textarea>
+          </div>
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary btn-lg fw-bold" type="submit">
+              {% if item %}
+                Save Changes
+              {% else %}
+                Add Item
+              {% endif %}
+            </button>
+            <a href="{{ url_for('inventory.index') }}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
